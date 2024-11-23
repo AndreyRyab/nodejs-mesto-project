@@ -41,9 +41,16 @@
       "no-underscore-dangle": [
           "error",
           {
-              "allow": [
-                  "_id"
-              ]
+              "args": "all",
+              "argsIgnorePattern": "^_",
+              "varsIgnorePattern": "^_",
+              "coughtIgnorePattern": "^_"
+          }
+      ],
+      "no-unused-vars": [
+          "error",
+          {
+              "argsIgnorePattern": "^_"
           }
       ]
   }

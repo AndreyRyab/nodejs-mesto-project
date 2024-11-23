@@ -4,10 +4,10 @@
   "description": "API for the Mesto project",
   "main": "dist/app.js",
   "scripts": {
-    "lint": "npx eslint src/**/*.ts",
+    "lint": "npx eslint .",
     "build": "tsc",
-    "dev": "ts-node-dev src/app.ts",
-    "start": "ts-node src/app.ts",
+    "dev": "ts-node-dev --env-file .env src/app.ts",
+    "start": "ts-node --env-file .env src/app.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andrey Ryabtsev",
