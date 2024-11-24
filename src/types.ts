@@ -3,3 +3,7 @@ export type AuthContext = {
     _id: string
   }
 };
+
+export interface ICustomError extends Error {
+  statusCode: number;
+}
