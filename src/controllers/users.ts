@@ -1,3 +1,4 @@
+import { constants } from 'http2';
 import { NextFunction, Request, Response } from 'express';
 import { Error as MongooseError } from 'mongoose';
 
@@ -5,7 +6,6 @@ import NotFoundError from '../errors/not-found-error';
 import BadRequestError from '../errors/bad-request-error';
 
 import User from '../models/user';
-import { constants } from 'http2';
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -33,7 +33,7 @@ export const getUserList = async (req: Request, res: Response, next: NextFunctio
   } catch (error) {
     return next(error);
   }
-}
+};
 
 export const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   try {

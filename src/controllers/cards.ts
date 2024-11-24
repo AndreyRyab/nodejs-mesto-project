@@ -7,7 +7,11 @@ import BadRequestError from '../errors/bad-request-error';
 import { AuthContext } from '../types';
 import NotFoundError from '../errors/not-found-error';
 
-export const createCard = async (req: Request, res: Response<unknown, AuthContext>, next: NextFunction) => {
+export const createCard = async (
+  req: Request,
+  res: Response<unknown, AuthContext>,
+  next: NextFunction,
+) => {
   try {
     const card = await Card.create({
       name: req.body.name,
@@ -84,20 +88,7 @@ export const dislikeCard = async (req: Request, res: Response, next: NextFunctio
     if (error instanceof MongooseError.CastError) {
       return next(new BadRequestError('Not valid card ID'));
     }
-    
+
     return next(error);
   }
 };
-
-
-/* const likeCard = (req, res) => Card.findByIdAndUpdate(
-  req.params.cardId,
-  { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
-  { new: true },
-)
-
-const dislikeCard = (req, res) => Card.findByIdAndUpdate(
-  req.params.cardId,
-  { $pull: { likes: req.user._id } }, // убрать _id из массива
-  { new: true },
-) */

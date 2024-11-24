@@ -4,7 +4,7 @@
   "description": "API for the Mesto project",
   "main": "dist/app.js",
   "scripts": {
-    "lint": "npx eslint .",
+    "lint": "npx eslint src/**/*.ts",
     "build": "tsc",
     "dev": "ts-node-dev --env-file .env src/app.ts",
     "start": "ts-node --env-file .env src/app.ts",
