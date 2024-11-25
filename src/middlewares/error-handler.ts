@@ -5,7 +5,8 @@ import {
   NextFunction,
 } from 'express';
 import { constants } from 'http2';
-import { ICustomError } from 'types';
+
+import { ICustomError } from '../types';
 
 const errorHandler: ErrorRequestHandler = (
   err: ICustomError,
