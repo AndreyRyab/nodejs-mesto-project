@@ -6,6 +6,7 @@ import express, {
   urlencoded,
 } from 'express';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
 import mongoose, { Error } from 'mongoose';
 
 import { AuthContext } from './types';
@@ -17,6 +18,8 @@ dotenv.config();
 const { PORT = 3000, MONGO_URL } = process.env;
 
 const app = express();
+
+app.use(helmet());
 
 app.use(json());
 app.use(urlencoded({ extended: true }));

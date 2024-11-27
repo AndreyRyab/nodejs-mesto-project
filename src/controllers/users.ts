@@ -60,6 +60,10 @@ export const updateProfile = async (req: Request, res: Response, next: NextFunct
 
     return res.send(updatedUser);
   } catch (error) {
+    if (error instanceof MongooseError.ValidationError) {
+      return next(new BadRequestError('Not valid data provided'));
+    }
+
     if (error instanceof MongooseError.CastError) {
       return next(new BadRequestError('Not valid user ID'));
     }
@@ -77,6 +81,10 @@ export const updateAvatar = async (req: Request, res: Response, next: NextFuncti
 
     return res.send(updatedUser);
   } catch (error) {
+    if (error instanceof MongooseError.ValidationError) {
+      return next(new BadRequestError('Field Avatar must be a valid URL'));
+    }
+
     if (error instanceof MongooseError.CastError) {
       return next(new BadRequestError('Not valid user ID'));
     }

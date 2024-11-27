@@ -1,3 +1,4 @@
+import { constants } from 'http2';
 import { NextFunction, Request, Response } from 'express';
 import { Error as MongooseError } from 'mongoose';
 
@@ -21,7 +22,7 @@ export const createCard = async (
       createdAt: Date.now(),
     });
 
-    return res.send(card);
+    return res.status(constants.HTTP_STATUS_CREATED).send(card);
   } catch (error) {
     if (error instanceof MongooseError.ValidationError) {
       return next(new BadRequestError(error.message));
