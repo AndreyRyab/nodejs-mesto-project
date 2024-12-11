@@ -5,19 +5,20 @@ import { Error as MongooseError } from 'mongoose';
 import Card from '../models/card';
 import BadRequestError from '../errors/bad-request-error';
 
-import { AuthContext } from '../types';
+import { IAuthContext, RequestWithUserType } from '../types';
 import NotFoundError from '../errors/not-found-error';
+import ForbiddenError from '../errors/forbidden-error';
 
 export const createCard = async (
-  req: Request,
-  res: Response<unknown, AuthContext>,
+  req: RequestWithUserType,
+  res: Response<unknown, IAuthContext>,
   next: NextFunction,
 ) => {
   try {
     const card = await Card.create({
       name: req.body.name,
       link: req.body.link,
-      owner: res.locals.user._id,
+      owner: req.user?._id,
       likes: [],
       createdAt: Date.now(),
     });
@@ -32,21 +33,21 @@ export const createCard = async (
   }
 };
 
-export const getCardList = async (req: Request, res: Response, next: NextFunction) => {
+export const getCardList = async (_: Request, res: Response, next: NextFunction) => {
   try {
-    const userList = await Card.find({});
+    const cardList = await Card.find({});
 
-    return res.send(userList);
+    return res.send(cardList);
   } catch (error) {
     return next(error);
   }
 };
 
-export const deleteCard = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteCard = async (req: RequestWithUserType, res: Response, next: NextFunction) => {
   try {
     const { cardId } = req.params;
 
-    const deletedCard = await Card.findByIdAndDelete(cardId).orFail(() => new NotFoundError('Card not found'));
+    const deletedCard = await Card.findOneAndDelete({ _id: cardId, owner: req.user?._id }).orFail(() => new ForbiddenError('Forbidden'));
 
     return res.send(deletedCard);
   } catch (error) {
@@ -58,11 +59,11 @@ export const deleteCard = async (req: Request, res: Response, next: NextFunction
   }
 };
 
-export const likeCard = async (req: Request, res: Response, next: NextFunction) => {
+export const likeCard = async (req: RequestWithUserType, res: Response, next: NextFunction) => {
   try {
     const likedCard = await Card.findByIdAndUpdate(
       req.params.cardId,
-      { $addToSet: { likes: res.locals.user._id } },
+      { $addToSet: { likes: req.user?._id } },
       { new: true },
     ).orFail(() => new NotFoundError('Card not found'));
 
@@ -76,11 +77,11 @@ export const likeCard = async (req: Request, res: Response, next: NextFunction) 
   }
 };
 
-export const dislikeCard = async (req: Request, res: Response, next: NextFunction) => {
+export const dislikeCard = async (req: RequestWithUserType, res: Response, next: NextFunction) => {
   try {
     const likedCard = await Card.findByIdAndUpdate(
       req.params.cardId,
-      { $pull: { likes: res.locals.user._id } },
+      { $pull: { likes: req.user?._id } },
       { new: true },
     ).orFail(() => new NotFoundError('Card not found'));
 
