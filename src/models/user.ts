@@ -1,6 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import isEmail from 'validator/lib/isEmail';
-import isURL from 'validator/lib/isURL';
 
 export interface IUser extends Document {
   email: string;
