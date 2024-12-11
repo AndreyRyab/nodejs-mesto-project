@@ -7,11 +7,11 @@ import {
   getCardList,
   likeCard,
 } from '../controllers/cards';
-import { validateCardId } from '../middlewares/validation';
+import { validateCardBody, validateCardId } from '../middlewares/validation';
 
 const cardsRouter = Router();
 
-cardsRouter.post('/', createCard);
+cardsRouter.post('/', validateCardBody, createCard);
 
 cardsRouter.get('/', getCardList);
 

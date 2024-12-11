@@ -20,7 +20,6 @@ export const createCard = async (
       link: req.body.link,
       owner: req.user?._id,
       likes: [],
-      createdAt: Date.now(),
     });
 
     return res.status(constants.HTTP_STATUS_CREATED).send(card);
@@ -47,9 +46,15 @@ export const deleteCard = async (req: RequestWithUserType, res: Response, next: 
   try {
     const { cardId } = req.params;
 
-    const deletedCard = await Card.findOneAndDelete({ _id: cardId, owner: req.user?._id }).orFail(() => new ForbiddenError('Forbidden'));
+    const card = await Card.findById(cardId).orFail(() => new NotFoundError('Card not found'));
 
-    return res.send(deletedCard);
+    if (card.owner.toString() !== req.user?._id) {
+      throw new ForbiddenError('Forbidden');
+    } else {
+      const deletedCard = await Card.findByIdAndDelete(cardId);
+
+      return res.send(deletedCard);
+    }
   } catch (error) {
     if (error instanceof MongooseError.CastError) {
       return next(new BadRequestError('Not valid card ID'));

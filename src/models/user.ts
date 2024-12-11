@@ -1,6 +1,8 @@
 import mongoose, { Schema, Document } from 'mongoose';
 import isEmail from 'validator/lib/isEmail';
 
+import URL_REGEX from '../constants/validation';
+
 export interface IUser extends Document {
   email: string;
   password: string;
@@ -42,8 +44,7 @@ const userSchema = new Schema<IUser>(
       default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
       validate: {
         validator(v: string) {
-          return /^https?:\/\/(www\.)?[a-z0-9-]+\.[a-z]{2,10}\/?[a-z0-9-._~:/?#[\]@!$&'()*+,;=]*#?$/i
-            .test(v);
+          return URL_REGEX.test(v);
         },
         message: 'Field Avatar must be a valid URL',
       },

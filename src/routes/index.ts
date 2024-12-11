@@ -3,10 +3,12 @@ import { Router } from 'express';
 import usersRouter from './users';
 import cardsRouter from './cards';
 
+import NotFoundError from '../errors/not-found-error';
+
 const router = Router();
 
 router.use('/users', usersRouter);
 router.use('/cards', cardsRouter);
-router.use('*', (_, res) => res.status(404).send({ message: 'Not found resource' }));
+router.use('*', (_req, _res, next) => next(new NotFoundError('Not found resource')));
 
 export default router;

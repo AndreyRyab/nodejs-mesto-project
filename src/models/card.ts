@@ -1,5 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
 
+import URL_REGEX from '../constants/validation';
+
 interface ICard {
   name: string;
   link: string;
@@ -19,6 +21,12 @@ const cardSchema = new Schema<ICard>(
     link: {
       type: String,
       required: true,
+      validate: {
+        validator(v: string) {
+          return URL_REGEX.test(v);
+        },
+        message: 'Field link must be a valid URL',
+      },
     },
     owner: {
       type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +35,6 @@ const cardSchema = new Schema<ICard>(
     likes: {
       type: [mongoose.Schema.Types.ObjectId],
       required: true,
-      default: [],
     },
     createdAt: {
       type: Date,
