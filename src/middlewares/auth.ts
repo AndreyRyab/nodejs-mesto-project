@@ -2,10 +2,11 @@ import jwt from 'jsonwebtoken';
 import { NextFunction, Response, Request } from 'express';
 
 import UnauthorizedError from '../errors/unauthorized-error';
+import { DEV_SECRET } from '../constants/dev-secret';
 
 import { RequestWithUserType } from '../types';
 
-const { SECRET_KEY = 'dev-secret' } = process.env;
+const { SECRET_KEY = DEV_SECRET } = process.env;
 
 const auth = (req: Request, _: Response, next: NextFunction) => {
   if (!req.cookies.jwt) {

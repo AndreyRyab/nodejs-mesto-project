@@ -5,19 +5,21 @@ import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
 
+import User from '../models/user';
+
 import NotFoundError from '../errors/not-found-error';
 import BadRequestError from '../errors/bad-request-error';
 import ConflictError from '../errors/сonflict-error';
 import UnauthorizedError from '../errors/unauthorized-error';
 
-import User from '../models/user';
+import { DEV_SALT, DEV_SECRET } from '../constants/dev-secret';
 
 import { RequestWithUserType } from '../types';
 
 const MONGO_CONFLICT_ERROR_CODE = 'E11000';
 
 dotenv.config();
-const { SALT = 5, SECRET_KEY = 'dev-secret' } = process.env;
+const { SALT = DEV_SALT, SECRET_KEY = DEV_SECRET } = process.env;
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -90,7 +92,7 @@ export const getUser = async (req: RequestWithUserType, res: Response, next: Nex
   try {
     const { user } = req;
 
-    const userData = await User.findById(user?._id).orFail(() => new NotFoundError('User not found'));
+    const userData = await User.findById(user?._id);
 
     return res.send(userData);
   } catch (error) {
